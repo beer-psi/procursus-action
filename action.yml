@@ -7,60 +7,45 @@ inputs:
     description: 'Space-delimited list of packages to install after bootstrapping'
     required: false
     default: null
+  cache:
+    description: 'Cache Procursus installation for faster bootstrapping next run'
+    required: false
+    default: true
 
 runs:
   using: "composite"
   steps:
+    - uses: actions/cache@v2
+      id: procursus-cache
+      with:
+        path: /opt/procursus
+        key: ${{ runner.os }}-procursus
+      
     - name: Downloading bootstrap
       shell: bash
+      if: steps.procursus-cache.outputs.cache-hit != 'true'
       run: curl -L https://apt.procurs.us/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
+      
     - name: Extracting and installing bootstrap
       shell: bash
+      if: steps.procursus-cache.outputs.cache-hit != 'true'
       run: |
         zstd -d bootstrap.tar.zst
         sudo gtar -xpkf bootstrap.tar -C /
+        
     - name: Adding Procusus to PATH
       shell: bash
       run: |
-        echo "/opt/procursus/games" >> $GITHUB_PATH
-        echo "/opt/procursus/sbin" >> $GITHUB_PATH
-        echo "/opt/procursus/bin" >> $GITHUB_PATH
-        
+        echo "/opt/procursus/bin:/opt/procursus/sbin:/opt/procursus/games" >> $GITHUB_PATH
         echo "CPATH='$CPATH:/opt/procursus/include'" >> $GITHUB_ENV
-        echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV
-    - name: Create unprivileged user for apt method
-      shell: bash
-      run: |
-        set -e
-
-        getHiddenUserUid()
-        {
-            local __UIDS=$(dscl . -list /Users UniqueID | awk '{print $2}' | sort -ugr)
-
-            local __NewUID
-            for __NewUID in $__UIDS
-            do
-                if [[ $__NewUID -lt 499 ]] ; then
-                    break;
-                fi
-            done
-
-            echo $((__NewUID+1))
-        }
+        echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV  
         
-        if ! id _apt &>/dev/null; then
-            # add unprivileged user for the apt methods
-            sudo dscl . -create /Users/_apt UserShell /usr/bin/false
-            sudo dscl . -create /Users/_apt NSFHomeDirectory /var/empty
-            sudo dscl . -create /Users/_apt PrimaryGroupID -1
-            sudo dscl . -create /Users/_apt UniqueID $(getHiddenUserUid)
-            sudo dscl . -create /Users/_apt RealName "APT Sandbox User"
-        fi      
-    - name: Doing full upgrade
+    - name: Updating bootstrap
       shell: bash
       run: |
         sudo apt-get -y update
-        sudo apt-get -y full-upgrade
+        sudo apt-get -y dist-upgrade || :
+
     - name: Install packages
       shell: bash
       if: inputs.packages
