@@ -8,6 +8,7 @@ jobs:
       - name: Installs Procursus with GitHub action
         uses: beerpiss/procursus-action@main
       - name: Tests
+        continue-on-error: true
         run: |
           echo "--- PATH ---"
           echo $PATH
