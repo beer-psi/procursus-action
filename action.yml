@@ -23,7 +23,7 @@ runs:
         key: ${{ runner.os }}-procursus
       
     - name: Setting up bootstrap
-      if: inputs.cache != 'true' && steps.procursus-cache.outputs.cache-hit != 'true'
+      if: inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         curl -L https://apt.procurs.us/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
