@@ -15,9 +15,9 @@ runs:
     - name: Adding Procusus to PATH
       shell: bash
       run: |
-        echo "/opt/procursus/bin" >> $GITHUB_PATH
-        echo "/opt/procursus/sbin" >> $GITHUB_PATH
         echo "/opt/procursus/games" >> $GITHUB_PATH
+        echo "/opt/procursus/sbin" >> $GITHUB_PATH
+        echo "/opt/procursus/bin" >> $GITHUB_PATH
         
         echo "CPATH='$CPATH:/opt/procursus/include'" >> $GITHUB_ENV
         echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV
