@@ -1,0 +1,22 @@
+on: [push]
+
+jobs:
+  procursus:
+    runs-on: macos-latest
+    name: Installs Procursus
+    steps:
+      - name: Installs Procursus with GitHub action
+        uses: beerpiss/procursus-action@main
+      - name: Tests
+        run: |
+          echo "--- PATH ---"
+          echo $PATH
+          
+          echo "--- CPATH ---"
+          echo $CPATH
+          
+          echo "--- LIBRARY_PATH ---"
+          echo $LIBRARY_PATH
+          
+          echo "--- apt ---"
+          apt-get
