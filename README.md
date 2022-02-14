@@ -2,7 +2,7 @@
 
 Bootstraps the Procursus toolchain onto a macOS runner. 
 
-## Wait, what's Theos?
+## fuck is Procursus?
 
 [Procursus](https://github.com/ProcursusTeam/Procursus) is a build-system that provides a large set of consistently up-to-date *nix tools cross compiled to work on Darwin based platforms.
 
