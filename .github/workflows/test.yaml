@@ -49,8 +49,8 @@ jobs:
     steps:
       - name: Installs Procursus with GitHub action (no cache)
         uses: beerpiss/procursus-action@main
-          with:
-           cache: false
+        with:
+         cache: false
       - name: Tests
         continue-on-error: true
         run: |
