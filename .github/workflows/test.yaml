@@ -45,9 +45,9 @@ jobs:
           apt-get
   procursus-no-cache:
     runs-on: macos-latest
-    name: Installs Procursus
+    name: Installs Procursus (no cache)
     steps:
-      - name: Installs Procursus with GitHub action (no cache)
+      - name: Installs Procursus with GitHub action 
         uses: beerpiss/procursus-action@main
         with:
          cache: false
