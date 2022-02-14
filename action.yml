@@ -41,16 +41,14 @@ runs:
             echo $((__NewUID+1))
         }
         
-        if [ "$1" = 'configure' ]; then
-            if ! id _apt &>/dev/null; then
-                # add unprivileged user for the apt methods
-                dscl . -create /Users/_apt UserShell /usr/bin/false
-                dscl . -create /Users/_apt NSFHomeDirectory /var/empty
-                dscl . -create /Users/_apt PrimaryGroupID -1
-                dscl . -create /Users/_apt UniqueID $(getHiddenUserUid)
-                dscl . -create /Users/_apt RealName "APT Sandbox User"
-            fi
-        fi       
+        if ! id _apt &>/dev/null; then
+            # add unprivileged user for the apt methods
+            dscl . -create /Users/_apt UserShell /usr/bin/false
+            dscl . -create /Users/_apt NSFHomeDirectory /var/empty
+            dscl . -create /Users/_apt PrimaryGroupID -1
+            dscl . -create /Users/_apt UniqueID $(getHiddenUserUid)
+            dscl . -create /Users/_apt RealName "APT Sandbox User"
+        fi      
     - name: Doing full upgrade
       shell: bash
       run: |
