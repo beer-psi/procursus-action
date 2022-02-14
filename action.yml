@@ -19,7 +19,7 @@ runs:
       id: procursus-cache
       if: inputs.cache == 'true'
       with:
-        path: /opt/__procursus_cache
+        path: /usr/local/opt/__procursus_cache
         key: ${{ runner.os }}-procursus
       
     - name: Setting up bootstrap
@@ -34,9 +34,9 @@ runs:
       if: inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true'
       shell: bash
       run: |
-        sudo mkdir -p /opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
-          /opt/__procursus_cache/procursus/var/lib/apt/lists/partial
-        sudo rsync -aP /opt/__procursus_cache/procursus /opt
+        sudo mkdir -p /usr/local/opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
+          /usr/local/opt/__procursus_cache/procursus/var/lib/apt/lists/partial
+        sudo rsync -aP /usr/local/opt/__procursus_cache/procursus /opt
 
     - name: Adding Procusus to PATH
       shell: bash
@@ -55,11 +55,11 @@ runs:
       if: inputs.cache == 'true'
       shell: bash
       run: |
-        sudo mkdir -p /opt/__procursus_cache
-        sudo rsync -aP /opt/procursus /opt/__procursus_cache
-        sudo rm -rf /opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
-          /opt/__procursus_cache/procursus/var/lib/apt/lists/partial \
-          /opt/__procursus_cache/procursus/Library/dpkg/triggers/Lock
+        sudo mkdir -p /usr/local/opt/__procursus_cache
+        sudo rsync -aP /opt/procursus /usr/local/opt/__procursus_cache
+        sudo rm -rf /usr/local/opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
+          /usr/local/opt/__procursus_cache/procursus/var/lib/apt/lists/partial \
+          /usr/local/opt/__procursus_cache/procursus/Library/dpkg/triggers/Lock
 
     - name: Install packages
       shell: bash

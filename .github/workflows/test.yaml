@@ -43,3 +43,25 @@ jobs:
           
           echo "--- apt ---"
           apt-get
+  procursus-no-cache:
+    runs-on: macos-latest
+    name: Installs Procursus
+    steps:
+      - name: Installs Procursus with GitHub action (no cache)
+        uses: beerpiss/procursus-action@main
+          with:
+           cache: false
+      - name: Tests
+        continue-on-error: true
+        run: |
+          echo "--- PATH ---"
+          echo $PATH
+          
+          echo "--- CPATH ---"
+          echo $CPATH
+          
+          echo "--- LIBRARY_PATH ---"
+          echo $LIBRARY_PATH
+          
+          echo "--- apt ---"
+          apt-get
