@@ -1,6 +1,13 @@
 name: 'Install Procursus'
 description: 'Install the Procursus toolchain'
 author: 'beerpsi'
+
+inputs:
+  packages:
+    description: 'Packages to install on top of the base Procursus bootstrap'
+    required: false
+    default: null
+
 runs:
   using: "composite"
   steps:
@@ -54,6 +61,11 @@ runs:
       run: |
         sudo apt-get -y update
         sudo apt-get -y full-upgrade
+    - name: Install packages
+      shell: bash
+      if: inputs.packages
+      run: |
+        sudo apt-get install -y ${{ inputs.packages }}
         
 
 branding:
