@@ -43,11 +43,11 @@ runs:
         
         if ! id _apt &>/dev/null; then
             # add unprivileged user for the apt methods
-            dscl . -create /Users/_apt UserShell /usr/bin/false
-            dscl . -create /Users/_apt NSFHomeDirectory /var/empty
-            dscl . -create /Users/_apt PrimaryGroupID -1
-            dscl . -create /Users/_apt UniqueID $(getHiddenUserUid)
-            dscl . -create /Users/_apt RealName "APT Sandbox User"
+            sudo dscl . -create /Users/_apt UserShell /usr/bin/false
+            sudo dscl . -create /Users/_apt NSFHomeDirectory /var/empty
+            sudo dscl . -create /Users/_apt PrimaryGroupID -1
+            sudo dscl . -create /Users/_apt UniqueID $(getHiddenUserUid)
+            sudo dscl . -create /Users/_apt RealName "APT Sandbox User"
         fi      
     - name: Doing full upgrade
       shell: bash
