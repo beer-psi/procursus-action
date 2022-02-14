@@ -17,34 +17,49 @@ runs:
   steps:
     - uses: actions/cache@v2
       id: procursus-cache
+      if: inputs.cache == 'true'
       with:
-        path: /opt/procursus
+        path: /opt/__procursus_cache
         key: ${{ runner.os }}-procursus
       
-    - name: Downloading bootstrap
+    - name: Setting up bootstrap
+      if: inputs.cache != 'true' && steps.procursus-cache.outputs.cache-hit != 'true'
       shell: bash
-      if: steps.procursus-cache.outputs.cache-hit != 'true'
-      run: curl -L https://apt.procurs.us/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
-      
-    - name: Extracting and installing bootstrap
-      shell: bash
-      if: steps.procursus-cache.outputs.cache-hit != 'true'
       run: |
+        curl -L https://apt.procurs.us/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
         zstd -d bootstrap.tar.zst
         sudo gtar -xpkf bootstrap.tar -C /
         
+    - name: Restoring bootstrap from cache
+      if: inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        sudo mkdir -p /opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
+          /opt/__procursus_cache/procursus/var/lib/apt/lists/partial
+        sudo rsync -aP /opt/__procursus_cache/procursus /opt
+
     - name: Adding Procusus to PATH
       shell: bash
       run: |
         echo "/opt/procursus/bin:/opt/procursus/sbin:/opt/procursus/games" >> $GITHUB_PATH
         echo "CPATH='$CPATH:/opt/procursus/include'" >> $GITHUB_ENV
-        echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV  
+        echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV
         
     - name: Updating bootstrap
       shell: bash
       run: |
         sudo apt-get -y update
         sudo apt-get -y dist-upgrade || :
+    
+    - name: Caching bootstrap
+      if: inputs.cache == 'true'
+      shell: bash
+      run: |
+        sudo mkdir -p /opt/__procursus_cache
+        sudo rsync -aP /opt/procursus /opt/__procursus_cache
+        sudo rm -rf /opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
+          /opt/__procursus_cache/procursus/var/lib/apt/lists/partial \
+          /opt/__procursus_cache/procursus/Library/dpkg/triggers/Lock
 
     - name: Install packages
       shell: bash
