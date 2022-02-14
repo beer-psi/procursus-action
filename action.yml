@@ -4,9 +4,9 @@ author: 'beerpsi'
 
 inputs:
   packages:
-    description: 'Packages to install on top of the base Procursus bootstrap'
+    description: 'Array of packages to install on top of the base Procursus bootstrap'
     required: false
-    default: null
+    default: []
 
 runs:
   using: "composite"
@@ -65,7 +65,7 @@ runs:
       shell: bash
       if: inputs.packages
       run: |
-        sudo apt-get install -y ${{ inputs.packages }}
+        sudo apt-get install -y ${{ join(inputs.packages, ' ') }}
         
 
 branding:
