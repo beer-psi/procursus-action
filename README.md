@@ -21,6 +21,9 @@ Only macOS runners, since Procursus itself only compiles for Darwin-based platfo
 
 Feel free to submit any issues or pull requests.
 
+### Known issues
+- /opt/procursus/bin/dpkg exits with error code 100. Restart workflow, I don't know why this happens /shrug
+
 ## License
 
 This project is released under the [0BSD License](LICENSE)
