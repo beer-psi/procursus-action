@@ -20,7 +20,7 @@ runs:
       if: inputs.cache == 'true'
       with:
         path: /usr/local/opt/__procursus_cache
-        key: ${{ runner.os }}-${{ env.GITHUB_JOB }}-procursus
+        key: ${{ runner.os }}-procursus
       
     - name: Setting up bootstrap
       if: inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true'
