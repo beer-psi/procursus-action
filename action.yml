@@ -33,7 +33,7 @@ runs:
         echo "::set-output name=darwin_version::$DARWIN_VERSION"
         echo "::set-output name=procursus_bootstrapped::`if [[ -e "/opt/procursus/.procursus_strapped" ]]; then echo 'true'; else echo 'false'; fi`"
         
-        if $(( DARWIN_VERSION < 20 )); then
+        if (( DARWIN_VERSION < 20 )); then
           echo 'This action only works on runners with macOS>=11'
           exit 1
         fi
