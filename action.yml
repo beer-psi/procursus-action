@@ -75,12 +75,12 @@ runs:
         
         case ":$CPATH:" in
           *:/opt/procursus/include:*) echo "/opt/procursus/include already in CPATH, not adding";;
-          *) echo "CPATH='$CPATH:/opt/procursus/include'" >> $GITHUB_ENV;;
+          *) echo "CPATH=$CPATH:/opt/procursus/include" >> $GITHUB_ENV;;
         esac
         
         case ":$LIBRARY_PATH:" in
           *:/opt/procursus/lib:*) echo "/opt/procursus/lib already in LIBRARY_PATH, not adding";;
-          *) echo "LIBRARY_PATH='$LIBRARY_PATH:/opt/procursus/lib'" >> $GITHUB_ENV;;
+          *) echo "LIBRARY_PATH=$LIBRARY_PATH:/opt/procursus/lib" >> $GITHUB_ENV;;
         esac
 
     - name: Create unprivileged user for apt method
