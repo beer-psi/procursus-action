@@ -11,12 +11,13 @@ inputs:
     description: 'Cache Procursus installation for faster bootstrapping next run'
     required: false
     default: true
+  cache-path:
 
 runs:
   using: "composite"
   steps:
     - name: initial macOS check
-      if: ${{ runner.os }} != 'macOS'
+      if: runner.os != 'macOS'
       shell: bash
       run: |
         echo 'This action only works on runners with macOS>=11'
