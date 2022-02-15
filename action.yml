@@ -12,6 +12,9 @@ inputs:
     required: false
     default: true
   cache-path:
+    description: 'Location to store the Procursus cache'
+    required: false
+    default: /usr/local/opt/__procursus_cache
 
 runs:
   using: "composite"
@@ -39,7 +42,7 @@ runs:
       id: procursus-cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
       with:
-        path: /usr/local/opt/__procursus_cache
+        path: ${{ inputs.cache-path }}
         key: ${{ runner.os }}-procursus
       
     - name: Setting up bootstrap
@@ -54,9 +57,9 @@ runs:
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true')
       shell: bash
       run: |
-        sudo mkdir -p /usr/local/opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
-          /usr/local/opt/__procursus_cache/procursus/var/lib/apt/lists/partial
-        sudo rsync -aP /usr/local/opt/__procursus_cache/procursus /opt
+        sudo mkdir -p ${{ inputs.cache-path }}/procursus/var/cache/apt/archives/partial \
+          ${{ inputs.cache-path }}/procursus/var/lib/apt/lists/partial
+        sudo rsync -aP ${{ inputs.cache-path }}/procursus /opt
 
     - name: Adding Procusus to PATH
       shell: bash
@@ -119,11 +122,11 @@ runs:
       if: inputs.cache == 'true'
       shell: bash
       run: |
-        sudo mkdir -p /usr/local/opt/__procursus_cache
-        sudo rsync -aP /opt/procursus /usr/local/opt/__procursus_cache
-        sudo rm -rf /usr/local/opt/__procursus_cache/procursus/var/cache/apt/archives/partial \
-          /usr/local/opt/__procursus_cache/procursus/var/lib/apt/lists/partial \
-          /usr/local/opt/__procursus_cache/procursus/Library/dpkg/triggers/Lock
+        sudo mkdir -p ${{ inputs.cache-path }}
+        sudo rsync -aP /opt/procursus ${{ inputs.cache-path }}
+        sudo rm -rf ${{ inputs.cache-path }}/procursus/var/cache/apt/archives/partial \
+          ${{ inputs.cache-path }}/procursus/var/lib/apt/lists/partial \
+          ${{ inputs.cache-path }}/procursus/Library/dpkg/triggers/Lock
 
     - name: Install packages
       shell: bash
