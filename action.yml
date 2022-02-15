@@ -59,7 +59,7 @@ runs:
       run: |
         sudo mkdir -p ${{ inputs.cache-path }}/procursus/var/cache/apt/archives/partial \
           ${{ inputs.cache-path }}/procursus/var/lib/apt/lists/partial
-        sudo rsync -aP ${{ inputs.cache-path }}/procursus /opt
+        sudo rsync -aWlHh --inplace ${{ inputs.cache-path }}/procursus /opt
 
     - name: Adding Procusus to PATH
       shell: bash
@@ -123,7 +123,7 @@ runs:
       shell: bash
       run: |
         sudo mkdir -p ${{ inputs.cache-path }}
-        sudo rsync -aP /opt/procursus ${{ inputs.cache-path }}
+        sudo rsync -alHh --inplace /opt/procursus ${{ inputs.cache-path }}
         sudo rm -rf ${{ inputs.cache-path }}/procursus/var/cache/apt/archives/partial \
           ${{ inputs.cache-path }}/procursus/var/lib/apt/lists/partial \
           ${{ inputs.cache-path }}/procursus/Library/dpkg/triggers/Lock
