@@ -65,3 +65,27 @@ jobs:
           
           echo "--- apt ---"
           apt-get
+  procursus-installed-twice:
+    runs-on: macos-latest
+    name: Installs Procursus (twice)
+    steps:
+      - name: Installs Procursus with GitHub action 
+        uses: beerpiss/procursus-action@main
+      - name: Installs ldid and make with the same action
+        uses: beerpiss/procursus-action@main
+        with:
+          packages: ldid make
+      - name: Tests
+        continue-on-error: true
+        run: |
+          echo "--- PATH ---"
+          echo $PATH
+          
+          echo "--- CPATH ---"
+          echo $CPATH
+          
+          echo "--- LIBRARY_PATH ---"
+          echo $LIBRARY_PATH
+          
+          echo "--- apt ---"
+          apt list
