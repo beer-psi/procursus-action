@@ -119,7 +119,7 @@ runs:
         sudo apt-get -y dist-upgrade || :
     
     - name: Caching bootstrap
-      if: inputs.cache == 'true'
+      if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true' 
       shell: bash
       run: |
         sudo mkdir -p ${{ inputs.cache-path }}
