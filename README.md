@@ -12,6 +12,7 @@ Only macOS 11 and newer runners (`macos-latest`), since Procursus itself only co
   with:
     packages:  # A space-delimited list of what to install after bootstrapping (etc. 'clang cmake')
     cache:  # Whether to cache the bootstrap for faster runs (default true)
+    cache-path:  # Location of the Procursus cache (default /usr/local/opt/__procursus_cache)
 
 ```
 
