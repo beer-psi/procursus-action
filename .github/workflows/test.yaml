@@ -21,6 +21,27 @@ jobs:
           
           echo "--- apt ---"
           apt-get
+  
+  procursus-unsupported:
+    runs-on: macos-10.15
+    name: Installs Procursus (unsupported)
+    steps:
+      - name: Installs Procursus with GitHub action
+        uses: beerpiss/procursus-action@main
+      - name: Tests
+        continue-on-error: true
+        run: |
+          echo "--- PATH ---"
+          echo $PATH
+          
+          echo "--- CPATH ---"
+          echo $CPATH
+          
+          echo "--- LIBRARY_PATH ---"
+          echo $LIBRARY_PATH
+          
+          echo "--- apt ---"
+          apt-get
   procursus-with-packages:
     runs-on: macos-latest
     name: Installs Procursus with extra packages
