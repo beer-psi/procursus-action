@@ -16,11 +16,10 @@ Only macOS 11 and newer runners (`macos-latest`), since Procursus itself only co
 
 ```
 
+If Procursus is already bootstrapped (the file `/opt/procursus/.procursus_strapped` exists), running this action will configure missing environment variables then update and install requested packages.
+
 ## Issues
 Feel free to submit any issues or pull requests.
-
-### Known issues
-- /opt/procursus/bin/dpkg exits with error code 100. Restart workflow, I don't know why this happens /shrug
 
 ## License
 
