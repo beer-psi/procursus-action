@@ -8,14 +8,14 @@ Bootstraps the Procursus toolchain onto a macOS runner.
 Only macOS 11 and newer runners (`macos-latest`), since Procursus itself only compiles for Darwin-based platforms.
 
 ```yaml
-- uses: beerpiss/procursus-action@v1  # the v1 tag refers to the latest of major version 1 (currently 1.3.1)
+- uses: beerpiss/procursus-action@v1  # the v1 tag refers to the latest of major version 1 (currently 1.4)
   with:
     packages:  # A space-delimited list of what to install after bootstrapping (etc. 'clang cmake')
-    cache:  # Whether to cache the bootstrap for faster runs (default true)
-    cache-path:  # Location of the Procursus cache (default /usr/local/opt/__procursus_cache)
-    mirror: # URL of Procursus repository
-    suites: # suites to use (etc. 'big_sur')
-    components: # components to use (etc. 'main testing')
+    cache:  # Whether to cache the bootstrap for faster runs (default: true)
+    cache-path:  # Location of the Procursus cache (default: /usr/local/opt/__procursus_cache)
+    mirror:  # URL of Procursus repository (default: https://apt.procurs.us)
+    suites:  # Suites to use (default: big_sur) 
+    components:  # Components to use (default: main)
 ```
 
 If Procursus is already bootstrapped (the file `/opt/procursus/.procursus_strapped` exists), running this action will configure missing environment variables then update and install requested packages.
