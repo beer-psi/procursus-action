@@ -76,7 +76,7 @@ runs:
     - name: Adding Procusus to PATH
       shell: bash
       run: |
-        PROCURSUS_PATHS=("/opt/procursus/local/bin" "/opt/procursus/local/sbin" "/opt/procursus/games" "/opt/procursus/sbin" "/opt/procursus/bin")
+        PROCURSUS_PATHS=("/opt/procursus/games" "/opt/procursus/sbin" "/opt/procursus/bin" "/opt/procursus/local/sbin" "/opt/procursus/local/bin")
         for i in "${PROCURSUS_PATHS[@]}";
         do
           case ":$PATH:" in
