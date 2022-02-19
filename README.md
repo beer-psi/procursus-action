@@ -13,7 +13,9 @@ Only macOS 11 and newer runners (`macos-latest`), since Procursus itself only co
     packages:  # A space-delimited list of what to install after bootstrapping (etc. 'clang cmake')
     cache:  # Whether to cache the bootstrap for faster runs (default true)
     cache-path:  # Location of the Procursus cache (default /usr/local/opt/__procursus_cache)
-
+    mirror: # URL of Procursus repository
+    suites: # suites to use (etc. 'big_sur')
+    components: # components to use (etc. 'main testing')
 ```
 
 If Procursus is already bootstrapped (the file `/opt/procursus/.procursus_strapped` exists), running this action will configure missing environment variables then update and install requested packages.
