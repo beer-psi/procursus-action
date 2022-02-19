@@ -46,7 +46,6 @@ runs:
         echo "::set-output name=procursus_bootstrapped::`if [[ -e "/opt/procursus/.procursus_strapped" ]]; then echo 'true'; else echo 'false'; fi`"
         
         echo "::set-output name=mirror_slug::`echo ${{ inputs.mirror }} | awk -F'://' '{print $NF}'`"
-        echo "::set-output name=components_slug::`echo ${{ inputs.components }} | tr " " "_"`"
         
         if (( DARWIN_VERSION < 20 )); then
           >&2 echo 'This action only works on runners with macOS>=11'
@@ -58,7 +57,7 @@ runs:
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
       with:
         path: ${{ inputs.cache-path }}
-        key: ${{ runner.os }}-${{ steps.information.outputs.mirror_slug }}-${{ inputs.suites }}-${{ steps.information.outputs.components_slug }}-procursus
+        key: ${{ runner.os }}-${{ steps.information.outputs.mirror_slug }}-${{ inputs.suites }}-procursus
       
     - name: Setting up bootstrap
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true')
