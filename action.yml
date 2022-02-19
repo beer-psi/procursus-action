@@ -15,6 +15,18 @@ inputs:
     description: 'Location to store the Procursus cache'
     required: false
     default: /usr/local/opt/__procursus_cache
+  mirror:
+    description: 'URL to Procursus repository'
+    required: false
+    default: 'https://apt.procurs.us'
+  suites:
+    description: 'Suites to use'
+    required: false
+    default: 'big_sur'
+  components:
+    description: 'Components to use'
+    required: false
+    default: 'main'
 
 runs:
   using: "composite"
@@ -34,7 +46,7 @@ runs:
         echo "::set-output name=procursus_bootstrapped::`if [[ -e "/opt/procursus/.procursus_strapped" ]]; then echo 'true'; else echo 'false'; fi`"
         
         if (( DARWIN_VERSION < 20 )); then
-          echo 'This action only works on runners with macOS>=11'
+          >&2 echo 'This action only works on runners with macOS>=11'
           exit 1
         fi
 
@@ -64,7 +76,7 @@ runs:
     - name: Adding Procusus to PATH
       shell: bash
       run: |
-        PROCURSUS_PATHS=("/opt/procursus/games" "/opt/procursus/sbin" "/opt/procursus/bin")
+        PROCURSUS_PATHS=("/opt/procursus/games" "/opt/procursus/sbin" "/opt/procursus/bin" "/opt/procursus/local/sbin" "/opt/procursus/local/bin")
         for i in "${PROCURSUS_PATHS[@]}";
         do
           case ":$PATH:" in
@@ -115,8 +127,9 @@ runs:
     - name: Updating bootstrap
       shell: bash
       run: |
+        echo -e 'Types: deb\nURIs:${{ inputs.mirror }}\nSuites: ${{ inputs.suites }}\nComponents: ${{ inputs.components }}\n' | sudo tee /opt/procursus/etc/apt/sources.list.d/procursus.sources
         sudo apt-get -y update
-        sudo apt-get -y dist-upgrade || :
+        sudo apt-get -y --allow-downgrades dist-upgrade || :
     
     - name: Caching bootstrap
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true' 
