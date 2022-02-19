@@ -98,3 +98,28 @@ jobs:
           
           echo "--- apt ---"
           apt list
+  procursus-custom-mirror:
+    runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+    name: Installs Procursus with a different mirror
+    steps:
+      - name: Installs Procursus with GitHub action 
+        uses: beerpiss/procursus-action@main
+        with:
+          mirror: https://repo.quiprr.dev/procursus
+          suites: big_sur
+          components: main testing
+      - name: Tests
+        continue-on-error: true
+        run: |
+          echo "--- PATH ---"
+          echo $PATH
+          
+          echo "--- CPATH ---"
+          echo $CPATH
+          
+          echo "--- LIBRARY_PATH ---"
+          echo $LIBRARY_PATH
+          
+          echo "--- apt ---"
+          apt list
