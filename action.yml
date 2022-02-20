@@ -69,7 +69,7 @@ runs:
 
           curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
           zstd -d bootstrap.tar.zst
-          sudo gtar -xpkf bootstrap.tar -C /
+          sudo tar -xpkf bootstrap.tar -C / || :
         )
         rm -rf $TEMPDIR
     - name: Restoring bootstrap from cache
