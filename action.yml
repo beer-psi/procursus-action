@@ -63,10 +63,15 @@ runs:
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true')
       shell: bash
       run: |
-        curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
-        zstd -d bootstrap.tar.zst
-        sudo gtar -xpkf bootstrap.tar -C /
-        
+        TEMPDIR="$(mktemp -d 'procursus.XXXXXXX')"
+        (
+          cd $TEMPDIR
+
+          curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
+          zstd -d bootstrap.tar.zst
+          sudo gtar -xpkf bootstrap.tar -C /
+        )
+        rm -rf $TEMPDIR
     - name: Restoring bootstrap from cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true')
       shell: bash
@@ -129,7 +134,7 @@ runs:
     - name: Updating bootstrap
       shell: bash
       run: |
-        echo -e 'Types: deb\nURIs:${{ inputs.mirror }}\nSuites: ${{ inputs.suites }}\nComponents: ${{ inputs.components }}\n' | sudo tee /opt/procursus/etc/apt/sources.list.d/procursus.sources
+        echo -e 'Types: deb\nURIs: ${{ inputs.mirror }}\nSuites: ${{ inputs.suites }}\nComponents: ${{ inputs.components }}\n' | sudo tee /opt/procursus/etc/apt/sources.list.d/procursus.sources
         sudo apt-get -y update
         sudo apt-get -y --allow-downgrades dist-upgrade || :
     
