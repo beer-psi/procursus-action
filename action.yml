@@ -63,7 +63,7 @@ runs:
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true')
       shell: bash
       run: |
-        curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst | zstdcat - | tar -xpkf - -C / || :
+        curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst | zstdcat - | sudo tar -xpkf - -C / || :
 
     - name: Restoring bootstrap from cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true')
