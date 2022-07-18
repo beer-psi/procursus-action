@@ -63,15 +63,8 @@ runs:
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true')
       shell: bash
       run: |
-        TEMPDIR="$(mktemp -d 'procursus.XXXXXXX')"
-        (
-          cd $TEMPDIR
+        curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst | zstdcat - | tar -xpkf - -C / || :
 
-          curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst -o bootstrap.tar.zst
-          zstd -d bootstrap.tar.zst
-          sudo tar -xpkf bootstrap.tar -C / || :
-        )
-        rm -rf $TEMPDIR
     - name: Restoring bootstrap from cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true')
       shell: bash
