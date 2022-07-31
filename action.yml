@@ -52,7 +52,7 @@ runs:
           exit 1
         fi
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       id: procursus-cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
       with:
