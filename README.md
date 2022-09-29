@@ -1,3 +1,6 @@
+**this project is unmaintained, i don't even have a darwin device anymore. will try to tend to issues but don't expect any big changes**
+----
+
 # procursus-action
 Bootstraps the Procursus toolchain onto a macOS runner. 
 
