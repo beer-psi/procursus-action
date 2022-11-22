@@ -52,7 +52,7 @@ runs:
           exit 1
         fi
 
-    - name: Setup cache
+    - name: Restore cache
       uses: actions/cache@v3
       id: procursus-cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
@@ -147,7 +147,6 @@ runs:
       if: inputs.packages
       run: |
         sudo apt-get install -y ${{ inputs.packages }}
-
 
 branding:
   icon: download-cloud
