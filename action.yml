@@ -5,7 +5,8 @@ author: 'beerpsi'
 inputs:
   packages:
     description: 'Space-delimited list of packages to install after bootstrapping'
-    required: true
+    required: false
+    default: null
   cache:
     description: 'Cache Procursus installation for faster bootstrapping next run'
     required: false
