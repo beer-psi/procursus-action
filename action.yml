@@ -31,41 +31,43 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: initial macOS check
+    - name: Initial macOS check
       if: runner.os != 'macOS'
       shell: bash
       run: |
         echo 'This action only works on runners with macOS>=11'
         exit 1
-        
-    - id: information
+
+    - name: Setup environment
+      id: information
       shell: bash
       run: |
         DARWIN_VERSION=`uname -r | cut -d'.' -f1 | tr -d '\n'`
-        echo "::set-output name=darwin_version::$DARWIN_VERSION"
-        echo "::set-output name=procursus_bootstrapped::`if [[ -e "/opt/procursus/.procursus_strapped" ]]; then echo 'true'; else echo 'false'; fi`"
-        
-        echo "::set-output name=mirror_slug::`echo ${{ inputs.mirror }} | awk -F'://' '{print $NF}'`"
-        
+        echo "darwin_version=$DARWIN_VERSION" >> $GITHUB_OUTPUT
+        echo "procursus_bootstrapped=`if [[ -e '/opt/procursus/.procursus_strapped' ]]; then echo 'true'; else echo 'false'; fi`" >> $GITHUB_OUTPUT
+
+        echo "mirror_slug=`echo ${{ inputs.mirror }} | awk -F'://' '{print $NF}'`" >> $GITHUB_OUTPUT
+
         if (( DARWIN_VERSION < 20 )); then
           >&2 echo 'This action only works on runners with macOS>=11'
           exit 1
         fi
 
-    - uses: actions/cache@v3
+    - name: Restore cache
+      uses: actions/cache@v3
       id: procursus-cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
       with:
         path: ${{ inputs.cache-path }}
         key: ${{ runner.os }}-${{ steps.information.outputs.mirror_slug }}-${{ inputs.suites }}-procursus
-      
-    - name: Setting up bootstrap
+
+    - name: Setup bootstrap
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache != 'true' || steps.procursus-cache.outputs.cache-hit != 'true')
       shell: bash
       run: |
         curl -L ${{ inputs.mirror }}/bootstrap_darwin-amd64.tar.zst | zstdcat - | sudo tar -xpkf - -C / || :
 
-    - name: Restoring bootstrap from cache
+    - name: Restore bootstrap from cache
       if: steps.information.outputs.procursus_bootstrapped != 'true' && (inputs.cache == 'true' && steps.procursus-cache.outputs.cache-hit == 'true')
       shell: bash
       run: |
@@ -73,7 +75,7 @@ runs:
           ${{ inputs.cache-path }}/procursus/var/lib/apt/lists/partial
         sudo rsync -aWlHh --inplace ${{ inputs.cache-path }}/procursus /opt
 
-    - name: Adding Procusus to PATH
+    - name: Add Procusus to PATH
       shell: bash
       run: |
         PROCURSUS_PATHS=("/opt/procursus/games" "/opt/procursus/sbin" "/opt/procursus/bin" "/opt/procursus/local/sbin" "/opt/procursus/local/bin")
@@ -84,12 +86,12 @@ runs:
             *) echo "$i" >> $GITHUB_PATH;;
           esac
         done
-        
+
         case ":$CPATH:" in
           *:/opt/procursus/include:*) echo "/opt/procursus/include already in CPATH, not adding";;
           *) echo "CPATH=$CPATH:/opt/procursus/include" >> $GITHUB_ENV;;
         esac
-        
+
         case ":$LIBRARY_PATH:" in
           *:/opt/procursus/lib:*) echo "/opt/procursus/lib already in LIBRARY_PATH, not adding";;
           *) echo "LIBRARY_PATH=$LIBRARY_PATH:/opt/procursus/lib" >> $GITHUB_ENV;;
@@ -112,7 +114,7 @@ runs:
           done
           echo $((__NewUID+1))
         }
-        
+
         if ! id _apt &>/dev/null; then
           # add unprivileged user for the apt methods
           sudo dscl . -create /Users/_apt UserShell /usr/bin/false
@@ -123,16 +125,16 @@ runs:
         else
           echo "APT Sandbox User already exists, not creating"
         fi
-        
-    - name: Updating bootstrap
+
+    - name: Update bootstrap
       shell: bash
       run: |
         echo -e 'Types: deb\nURIs: ${{ inputs.mirror }}\nSuites: ${{ inputs.suites }}\nComponents: ${{ inputs.components }}\n' | sudo tee /opt/procursus/etc/apt/sources.list.d/procursus.sources
         sudo apt-get -y update
         sudo apt-get -y --allow-downgrades dist-upgrade || :
-    
-    - name: Caching bootstrap
-      if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true' 
+
+    - name: Cache bootstrap
+      if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
       shell: bash
       run: |
         sudo mkdir -p ${{ inputs.cache-path }}
@@ -146,7 +148,6 @@ runs:
       if: inputs.packages
       run: |
         sudo apt-get install -y ${{ inputs.packages }}
-        
 
 branding:
   icon: download-cloud
