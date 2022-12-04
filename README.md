@@ -11,7 +11,7 @@ Bootstraps the Procursus toolchain onto a macOS runner.
 Only macOS 11 and newer runners (`macos-latest`), since Procursus itself only compiles for Darwin-based platforms.
 
 ```yaml
-- uses: beerpiss/procursus-action@v1  # the v1 tag refers to the latest of major version 1 (currently 1.4)
+- uses: beerpiss/procursus-action@v2  # the v2 tag refers to the latest of major version 2 (currently 2.0)
   with:
     packages:  # A space-delimited list of what to install after bootstrapping (etc. 'clang cmake')
     cache:  # Whether to cache the bootstrap for faster runs (default: true)
