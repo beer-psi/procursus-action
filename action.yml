@@ -2,6 +2,7 @@ name: 'Install Procursus'
 description: 'Install the Procursus toolchain'
 author: 'beerpsi'
 
+inputs:
   packages:
     description: 'Space-delimited list of packages to install after bootstrapping'
     required: false
