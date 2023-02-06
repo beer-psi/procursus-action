@@ -2,7 +2,6 @@ name: 'Install Procursus'
 description: 'Install the Procursus toolchain'
 author: 'beerpsi'
 
-inputs:
   packages:
     description: 'Space-delimited list of packages to install after bootstrapping'
     required: false
@@ -130,8 +129,8 @@ runs:
       shell: bash
       run: |
         echo -e 'Types: deb\nURIs: ${{ inputs.mirror }}\nSuites: ${{ inputs.suites }}\nComponents: ${{ inputs.components }}\n' | sudo tee /opt/procursus/etc/apt/sources.list.d/procursus.sources
-        sudo apt-get -y update
-        sudo apt-get -y --allow-downgrades dist-upgrade || :
+        sudo apt-get -y update 
+        sudo apt-get -y -o Dpkg::Options::="--force-confnew" --allow-downgrades dist-upgrade || :
 
     - name: Cache bootstrap
       if: steps.information.outputs.procursus_bootstrapped != 'true' && inputs.cache == 'true'
@@ -147,7 +146,7 @@ runs:
       shell: bash
       if: inputs.packages
       run: |
-        sudo apt-get install -y ${{ inputs.packages }}
+        sudo apt-get install -y -o Dpkg::Options::="--force-confnew" ${{ inputs.packages }}
 
 branding:
   icon: download-cloud
