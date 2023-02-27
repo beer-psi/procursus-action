@@ -106,7 +106,7 @@ jobs:
       - name: Installs Procursus with GitHub action 
         uses: beerpiss/procursus-action@main
         with:
-          mirror: https://repo.quiprr.dev/procursus
+          mirror: https://procursus.itsnebula.net
           suites: big_sur
           components: main testing
       - name: Tests
